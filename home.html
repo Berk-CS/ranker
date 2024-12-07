@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weighted Ranker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weighted Ranker</h1>
+
+        <!-- Appearance -->
+        <div class="category" id="appearanceCategory">
+            <div class="category-header" onclick="toggleCategory('appearance')">
+                <h3>Appearance</h3>
+                <span>Score: <span id="appearanceScore">0.0</span></span>
+            </div>
+            <div class="sliders active">
+                <label for="appearanceWeight">Weight (%):</label>
+                <input type="number" id="appearanceWeight" min="0" max="100" value="50" oninput="updateParentWeights('appearance')">
+                <div id="appearanceSubcategories">
+                    <div class="subcategory">
+                        <label>Face:</label>
+                        <input type="range" id="appearance-face" min="1" max="10" value="5" oninput="updateCategoryScore('appearance')">
+                        <input type="number" id="appearance-face-weight" min="0" max="100" value="33" oninput="updateSubcategoryWeights('appearance', 'appearance-face-weight')">
+                    </div>
+                    <div class="subcategory">
+                        <label>Hair:</label>
+                        <input type="range" id="appearance-hair" min="1" max="10" value="5" oninput="updateCategoryScore('appearance')">
+                        <input type="number" id="appearance-hair-weight" min="0" max="100" value="33" oninput="updateSubcategoryWeights('appearance', 'appearance-hair-weight')">
+                    </div>
+                    <div class="subcategory">
+                        <label>Physique:</label>
+                        <input type="range" id="appearance-physique" min="1" max="10" value="5" oninput="updateCategoryScore('appearance')">
+                        <input type="number" id="appearance-physique-weight" min="0" max="100" value="34" oninput="updateSubcategoryWeights('appearance', 'appearance-physique-weight')">
+                    </div>
+                </div>
+                <button onclick="addSubcategory('appearance')">Add Subcategory</button>
+            </div>
+        </div>
+
+        <!-- Personality -->
+        <div class="category" id="personalityCategory">
+            <div class="category-header" onclick="toggleCategory('personality')">
+                <h3>Personality</h3>
+                <span>Score: <span id="personalityScore">0.0</span></span>
+            </div>
+            <div class="sliders active">
+                <label for="personalityWeight">Weight (%):</label>
+                <input type="number" id="personalityWeight" min="0" max="100" value="50" oninput="updateParentWeights('personality')">
+                <div id="personalitySubcategories">
+                    <div class="subcategory">
+                        <label>Openness:</label>
+                        <input type="range" id="personality-openness" min="1" max="10" value="5" oninput="updateCategoryScore('personality')">
+                        <input type="number" id="personality-openness-weight" min="0" max="100" value="33" oninput="updateSubcategoryWeights('personality', 'personality-openness-weight')">
+                    </div>
+                    <div class="subcategory">
+                        <label>Kindness:</label>
+                        <input type="range" id="personality-kindness" min="1" max="10" value="5" oninput="updateCategoryScore('personality')">
+                        <input type="number" id="personality-kindness-weight" min="0" max="100" value="33" oninput="updateSubcategoryWeights('personality', 'personality-kindness-weight')">
+                    </div>
+                    <div class="subcategory">
+                        <label>Confidence:</label>
+                        <input type="range" id="personality-confidence" min="1" max="10" value="5" oninput="updateCategoryScore('personality')">
+                        <input type="number" id="personality-confidence-weight" min="0" max="100" value="34" oninput="updateSubcategoryWeights('personality', 'personality-confidence-weight')">
+                    </div>
+                </div>
+                <button onclick="addSubcategory('personality')">Add Subcategory</button>
+            </div>
+        </div>
+
+        <!-- Final Score -->
+        <div class="result">
+            <h2>Final Weighted Score: <span id="totalScore">0.0</span></h2>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
