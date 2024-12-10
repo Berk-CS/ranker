@@ -3,78 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weighted Ranker</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Category Ranking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 300px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input[type="range"], input[type="number"] {
+            width: 100%;
+        }
+        .result {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Weighted Ranker</h1>
+        <h2>Category Ranking</h2>
 
-        <!-- Appearance -->
-        <div class="category" id="appearanceCategory">
-            <div class="category-header" onclick="toggleCategory('appearance')">
-                <h3>Appearance</h3>
-                <span>Score: <span id="appearanceScore">0.0</span></span>
-            </div>
-            <div class="sliders active">
-                <label for="appearanceWeight">Weight (%):</label>
-                <input type="number" id="appearanceWeight" min="0" max="100" value="50" oninput="updateParentWeights('appearance')">
-                <div id="appearanceSubcategories">
-                    <div class="subcategory">
-                        <label>Face:</label>
-                        <input type="range" id="appearance-face" min="1" max="10" value="5" oninput="updateCategoryScore('appearance')">
-                        <input type="number" id="appearance-face-weight" min="0" max="100" value="33" oninput="updateSubcategoryWeights('appearance', 'appearance-face-weight')">
-                    </div>
-                    <div class="subcategory">
-                        <label>Hair:</label>
-                        <input type="range" id="appearance-hair" min="1" max="10" value="5" oninput="updateCategoryScore('appearance')">
-                        <input type="number" id="appearance-hair-weight" min="0" max="100" value="33" oninput="updateSubcategoryWeights('appearance', 'appearance-hair-weight')">
-                    </div>
-                    <div class="subcategory">
-                        <label>Physique:</label>
-                        <input type="range" id="appearance-physique" min="1" max="10" value="5" oninput="updateCategoryScore('appearance')">
-                        <input type="number" id="appearance-physique-weight" min="0" max="100" value="34" oninput="updateSubcategoryWeights('appearance', 'appearance-physique-weight')">
-                    </div>
-                </div>
-                <button onclick="addSubcategory('appearance')">Add Subcategory</button>
-            </div>
+        <!-- Input for Face -->
+        <div class="input-group">
+            <label for="face-value">Face (0-10)</label>
+            <input type="range" id="face-value" min="0" max="10" value="5">
+            <input type="number" id="face-num" value="5" min="0" max="10">
         </div>
 
-        <!-- Personality -->
-        <div class="category" id="personalityCategory">
-            <div class="category-header" onclick="toggleCategory('personality')">
-                <h3>Personality</h3>
-                <span>Score: <span id="personalityScore">0.0</span></span>
-            </div>
-            <div class="sliders active">
-                <label for="personalityWeight">Weight (%):</label>
-                <input type="number" id="personalityWeight" min="0" max="100" value="50" oninput="updateParentWeights('personality')">
-                <div id="personalitySubcategories">
-                    <div class="subcategory">
-                        <label>Openness:</label>
-                        <input type="range" id="personality-openness" min="1" max="10" value="5" oninput="updateCategoryScore('personality')">
-                        <input type="number" id="personality-openness-weight" min="0" max="100" value="33" oninput="updateSubcategoryWeights('personality', 'personality-openness-weight')">
-                    </div>
-                    <div class="subcategory">
-                        <label>Kindness:</label>
-                        <input type="range" id="personality-kindness" min="1" max="10" value="5" oninput="updateCategoryScore('personality')">
-                        <input type="number" id="personality-kindness-weight" min="0" max="100" value="33" oninput="updateSubcategoryWeights('personality', 'personality-kindness-weight')">
-                    </div>
-                    <div class="subcategory">
-                        <label>Confidence:</label>
-                        <input type="range" id="personality-confidence" min="1" max="10" value="5" oninput="updateCategoryScore('personality')">
-                        <input type="number" id="personality-confidence-weight" min="0" max="100" value="34" oninput="updateSubcategoryWeights('personality', 'personality-confidence-weight')">
-                    </div>
-                </div>
-                <button onclick="addSubcategory('personality')">Add Subcategory</button>
-            </div>
+        <!-- Input for Body -->
+        <div class="input-group">
+            <label for="body-value">Body (0-10)</label>
+            <input type="range" id="body-value" min="0" max="10" value="5">
+            <input type="number" id="body-num" value="5" min="0" max="10">
         </div>
 
-        <!-- Final Score -->
-        <div class="result">
-            <h2>Final Weighted Score: <span id="totalScore">0.0</span></h2>
+        <!-- Input for Personality -->
+        <div class="input-group">
+            <label for="personality-value">Personality (0-10)</label>
+            <input type="range" id="personality-value" min="0" max="10" value="5">
+            <input type="number" id="personality-num" value="5" min="0" max="10">
         </div>
+
+        <!-- Input for Weights -->
+        <div class="input-group">
+            <label for="face-weight">Face Weight (%)</label>
+            <input type="number" id="face-weight" value="34" min="0" max="100" step="1">
+        </div>
+        <div class="input-group">
+            <label for="body-weight">Body Weight (%)</label>
+            <input type="number" id="body-weight" value="33" min="0" max="100" step="1">
+        </div>
+        <div class="input-group">
+            <label for="personality-weight">Personality Weight (%)</label>
+            <input type="number" id="personality-weight" value="33" min="0" max="100" step="1">
+        </div>
+
+        <!-- Result -->
+        <div class="result" id="result"></div>
+        <div class="error" id="error"></div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        //helper function 
+        function intDivision(dividend, divisor) {
+            return (dividend / divisor) | 0; // Bitwise OR with 0 truncates towards zero
+        }
+        // Synchronize the slider and number input for Face
+        document.getElementById("face-value").addEventListener("input", function() {
+            document.getElementById("face-num").value = this.value;
+            calculateScore();
+        });
+        document.getElementById("face-num").addEventListener("input", function() {
+            document.getElementById("face-value").value = this.value;
+            calculateScore();
+        });
+
+        // Synchronize the slider and number input for Body
+        document.getElementById("body-value").addEventListener("input", function() {
+            document.getElementById("body-num").value = this.value;
+            calculateScore();
+        });
+        document.getElementById("body-num").addEventListener("input", function() {
+            document.getElementById("body-value").value = this.value;
+            calculateScore();
+        });
+
+        // Synchronize the slider and number input for Personality
+        document.getElementById("personality-value").addEventListener("input", function() {
+            document.getElementById("personality-num").value = this.value;
+            calculateScore();
+        });
+        document.getElementById("personality-num").addEventListener("input", function() {
+            document.getElementById("personality-value").value = this.value;
+            calculateScore();
+        });
+        // Synchronize the weight inputs
+        document.getElementById("face-weight").addEventListener("input", function() {
+            adjustWeights("face");
+            calculateScore();
+        });
+        document.getElementById("body-weight").addEventListener("input", function() {
+            adjustWeights("body");
+            calculateScore();
+        });
+        document.getElementById("personality-weight").addEventListener("input", function() {
+            adjustWeights("personality");
+            calculateScore();
+        });
+
+        // Function to adjust the weights based on Face
+        function adjustWeights(changedWeight) {
+             // Default weights
+            const defaultFaceWeight = 34;
+            const defaultBodyWeight = 33;
+            const defaultPersonalityWeight = 33;
+            //weights 
+            let faceWeight = 0;
+            let bodyWeight = 0;
+            let personalityWeight = 0;
+    console.log("changed weight: " + changedWeight);
+    // Get the changed weight and set the rest to the default values
+    if (changedWeight === "face") {
+        console.log("Face weight changed");
+        faceWeight = parseInt(document.getElementById("face-weight").value);
+        bodyWeight = defaultBodyWeight;
+        personalityWeight = defaultPersonalityWeight;
+    }
+    else if (changedWeight === "body") {
+        faceWeight = defaultFaceWeight;
+        bodyWeight = parseInt(document.getElementById("body-weight").value);
+        personalityWeight = defaultPersonalityWeight;
+    } else if (changedWeight === "personality") {
+        faceWeight = defaultFaceWeight;
+        bodyWeight = defaultBodyWeight;
+        personalityWeight = parseInt(document.getElementById("personality-weight").value);
+    }
+   
+    const maxWeight = 100;
+
+    // Determine which weight was changed
+    let change = 0;
+    console.log("Face weight: " + faceWeight);
+    if (faceWeight !== defaultFaceWeight) {
+        // Face weight was changed
+        change = defaultFaceWeight - faceWeight;
+        console.log("Face weight was changed by " + change);
+
+        if (change % 2 === 0) {
+            console.log("Even change");
+            bodyWeight += change / 2;
+            personalityWeight += change / 2;
+        } else {
+            console.log("Odd change");
+            bodyWeight += intDivision(change, 2);
+            console.log("Body weight: " + bodyWeight);
+            personalityWeight += intDivision(change, 2);
+            console.log("Personality weight: " + personalityWeight);
+            bodyWeight += change % 2; // Add the remainder to body
+            console.log("Body weight after remainder: " + bodyWeight);
+        }
+    } else if (bodyWeight !== defaultBodyWeight) {
+        // Body weight was changed
+        change = defaultBodyWeight - bodyWeight;
+
+        if (change % 2 === 0) {
+            faceWeight += change / 2;
+            personalityWeight += change / 2;
+        } else {
+            faceWeight += intDivision(change, 2);
+            personalityWeight += intDivision(change, 2);
+            personalityWeight += change % 2; // Add the remainder to personality
+        }
+    } else if (personalityWeight !== defaultPersonalityWeight) {
+        // Personality weight was changed
+        change = defaultPersonalityWeight - personalityWeight;
+
+        if (change % 2 === 0) {
+            faceWeight += change / 2;
+            bodyWeight += change / 2;
+        } else {
+            faceWeight += intDivision(change, 2);
+            bodyWeight += intDivision(change, 2);
+            bodyWeight += change % 2; // Add the remainder to body
+        }
+    }
+
+    // Ensure weights remain within valid bounds and adjust inputs
+    faceWeight = Math.max(0, Math.min(maxWeight, faceWeight));
+    bodyWeight = Math.max(0, Math.min(maxWeight, bodyWeight));
+    personalityWeight = Math.max(0, Math.min(maxWeight, personalityWeight));
+
+    // Update the weight inputs
+    document.getElementById("face-weight").value = faceWeight;
+    document.getElementById("body-weight").value = bodyWeight;
+    document.getElementById("personality-weight").value = personalityWeight;
+}
+
+        // Function to calculate total score
+        function calculateScore() {
+            const faceValue = parseInt(document.getElementById("face-num").value);
+            const bodyValue = parseInt(document.getElementById("body-num").value);
+            const personalityValue = parseInt(document.getElementById("personality-num").value);
+
+            const faceWeight = parseInt(document.getElementById("face-weight").value) / 100;
+            const bodyWeight = parseInt(document.getElementById("body-weight").value) / 100;
+            const personalityWeight = parseInt(document.getElementById("personality-weight").value) / 100;
+
+            // Check if weights sum up to 100
+            if (Math.abs((faceWeight + bodyWeight + personalityWeight) - 1) > 0.01) {
+                document.getElementById("error").textContent = "Error: Weights must sum to 100%!";
+                document.getElementById("result").textContent = "";
+                return;
+            } else {
+                document.getElementById("error").textContent = "";
+            }
+
+            // Calculate the total score
+            const totalScore = (faceValue * faceWeight) + (bodyValue * bodyWeight) + (personalityValue * personalityWeight);
+            document.getElementById("result").textContent = "Total Score: " + totalScore.toFixed(2);
+        }
+
+        // Initial calculation on page load
+        calculateScore();
+    </script>
+
 </body>
 </html>
