@@ -135,92 +135,76 @@
             calculateScore();
         });
 
+        let prevFaceWeight = 34;
+        let prevBodyWeight = 33;
+        let prevPersonalityWeight = 33;
         // Function to adjust the weights based on Face
         function adjustWeights(changedWeight) {
-             // Default weights
-            const defaultFaceWeight = 34;
-            const defaultBodyWeight = 33;
-            const defaultPersonalityWeight = 33;
+             // prev weights
             //weights 
             let faceWeight = 0;
             let bodyWeight = 0;
             let personalityWeight = 0;
-    console.log("changed weight: " + changedWeight);
-    // Get the changed weight and set the rest to the default values
+    // Get the changed weight and set the rest to the prev values
     if (changedWeight === "face") {
-        console.log("Face weight changed");
         faceWeight = parseInt(document.getElementById("face-weight").value);
-        bodyWeight = defaultBodyWeight;
-        personalityWeight = defaultPersonalityWeight;
+        bodyWeight = prevBodyWeight;
+        personalityWeight = prevPersonalityWeight;
     }
     else if (changedWeight === "body") {
-        faceWeight = defaultFaceWeight;
+        faceWeight = prevFaceWeight;
         bodyWeight = parseInt(document.getElementById("body-weight").value);
-        personalityWeight = defaultPersonalityWeight;
-    } else if (changedWeight === "personality") {
-        faceWeight = defaultFaceWeight;
-        bodyWeight = defaultBodyWeight;
-        personalityWeight = parseInt(document.getElementById("personality-weight").value);
-    }
-   
-    const maxWeight = 100;
+        personalityWeight = prevPersonalityWeight;
+    } 
 
+    const maxWeight = 100;
     // Determine which weight was changed
     let change = 0;
-    console.log("Face weight: " + faceWeight);
-    if (faceWeight !== defaultFaceWeight) {
+    if (faceWeight !== prevFaceWeight) {
         // Face weight was changed
-        change = defaultFaceWeight - faceWeight;
-        console.log("Face weight was changed by " + change);
+        console.log("Face weight was changed, prevFaceWeight: ", prevFaceWeight, " faceWeight: ", faceWeight);
+        change = prevFaceWeight - faceWeight;
+        prevFaceWeight = faceWeight;
 
         if (change % 2 === 0) {
-            console.log("Even change");
             bodyWeight += change / 2;
             personalityWeight += change / 2;
         } else {
-            console.log("Odd change");
             bodyWeight += intDivision(change, 2);
-            console.log("Body weight: " + bodyWeight);
             personalityWeight += intDivision(change, 2);
-            console.log("Personality weight: " + personalityWeight);
             bodyWeight += change % 2; // Add the remainder to body
-            console.log("Body weight after remainder: " + bodyWeight);
+            prevBodyWeight = bodyWeight;
         }
-    } else if (bodyWeight !== defaultBodyWeight) {
+    } else if (bodyWeight !== prevBodyWeight) {
         // Body weight was changed
-        change = defaultBodyWeight - bodyWeight;
-
-        if (change % 2 === 0) {
-            faceWeight += change / 2;
-            personalityWeight += change / 2;
+        change = prevBodyWeight - bodyWeight;
+        prevBodyWeight = bodyWeight;
+        // if the absolute value of change is less than personality weight, add the entire change to personaity weight
+        if (Math.abs(change) <= personalityWeight) {
+            personalityWeight += change; // Add the entire change to personality
         } else {
-            faceWeight += intDivision(change, 2);
-            personalityWeight += intDivision(change, 2);
-            personalityWeight += change % 2; // Add the remainder to personality
-        }
-    } else if (personalityWeight !== defaultPersonalityWeight) {
-        // Personality weight was changed
-        change = defaultPersonalityWeight - personalityWeight;
-
-        if (change % 2 === 0) {
-            faceWeight += change / 2;
-            bodyWeight += change / 2;
-        } else {
-            faceWeight += intDivision(change, 2);
-            bodyWeight += intDivision(change, 2);
-            bodyWeight += change % 2; // Add the remainder to body
+            if (change < 0) {
+                change += personalityWeight;
+                personalityWeight = 0;
+                faceWeight += change;
+            } else {
+                personalityWeight += change;
+            }
         }
     }
 
-    // Ensure weights remain within valid bounds and adjust inputs
-    faceWeight = Math.max(0, Math.min(maxWeight, faceWeight));
-    bodyWeight = Math.max(0, Math.min(maxWeight, bodyWeight));
-    personalityWeight = Math.max(0, Math.min(maxWeight, personalityWeight));
+    // return an error if any of the weights are negative or the sum is not 100
+    if (faceWeight < 0 || bodyWeight < 0 || personalityWeight < 0 || (faceWeight + bodyWeight + personalityWeight) !== maxWeight) {
+        document.getElementById("error").textContent = "Error: Weights must be positive and sum to 100!";
+        return;
+    } 
 
     // Update the weight inputs
     document.getElementById("face-weight").value = faceWeight;
     document.getElementById("body-weight").value = bodyWeight;
     document.getElementById("personality-weight").value = personalityWeight;
+    // Disable Personality input to prevent manual changes
+    document.getElementById("personality-weight").disabled = true;
 }
 
         // Function to calculate total score
