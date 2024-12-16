@@ -3,171 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category Ranking</title>
+    <title>Partner Ranking</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #f9fafc;
             margin: 0;
             padding: 20px;
         }
         .container {
-            width: 300px;
+            max-width: 400px;
             margin: 0 auto;
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
         }
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-size: 14px;
+            color: #555;
         }
         input[type="range"], input[type="number"] {
             width: 100%;
+            padding: 5px;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
         .result {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             text-align: center;
             margin-top: 20px;
+            color: #333;
         }
         .error {
             color: red;
-            font-size: 12px;
+            font-size: 13px;
+            text-align: center;
+        }
+        .hidden1 {
+            display: none;
+        }
+        .hidden2 {
+            display: none;
+        }
+        .toggle-button {
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .toggle-button:hover {
+            /* background-color: #a0b53f; */
+        }
+        .calculate-button {
+           background-color: rgb(41, 168, 41);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Category Ranking</h2>
-
-        <!-- Input for Face -->
+        <h1>Partner Ranking</h1>
+        <!-- input for appearance -->
         <div class="input-group">
-            <label for="face-value">Face (0-10)</label>
-            <input type="range" id="face-value" min="0" max="10" value="5">
-            <input type="number" id="face-num" value="5" min="0" max="10">
+            <label for="face-value"><h2>Appearance (0-100)</h2></label>
+            <input type="range" id="appearance-value" min="0" max="100" value="50">
+            <input type="number" id="appearance-num" value="50" min="0" max="100">
         </div>
 
-        <!-- Input for Body -->
-        <div class="input-group">
-            <label for="body-value">Body (0-10)</label>
-            <input type="range" id="body-value" min="0" max="10" value="5">
-            <input type="number" id="body-num" value="5" min="0" max="10">
+        <!-- button to customize appearance -->
+        <button id="toggleButtonAppearance" class="toggle-button" onclick="toggleAppearance('hidden1', 'toggleButtonAppearance')">Customize</button>
+        <div id="hidden1" class="hidden1">
+            <!-- Input for Face -->
+            <div class="input-group">
+                <label for="face-value">Face (0-100)</label>
+                <input type="range" id="face-value" min="0" max="100" value="50">
+                <input type="number" id="face-num" value="50" min="0" max="100">
+            </div>
+
+            <!-- Input for Body -->
+            <div class="input-group">
+                <label for="body-value">Body (0-100)</label>
+                <input type="range" id="body-value" min="0" max="100" value="50">
+                <input type="number" id="body-num" value="50" min="0" max="100">
+            </div>
+            
+            <!-- Input for Face and Body weights -->
+            <div class="input-group">
+                <label for="face-weight">Face Weight (%)</label>
+                <input type="number" id="face-weight" value="50" min="0" max="100" step="1">
+            </div>
+            <div class="input-group">
+                <label for="body-weight">Body Weight (%)</label>
+                <input type="number" id="body-weight" value="50" min="0" max="100" step="1"> 
+            </div>
+            <div class="face-body-button">
+                <button onclick="updateSubclass1()">Update</button>
+            </div>
         </div>
 
         <!-- Input for Personality -->
         <div class="input-group">
-            <label for="personality-value">Personality (0-10)</label>
-            <input type="range" id="personality-value" min="0" max="10" value="5">
-            <input type="number" id="personality-num" value="5" min="0" max="10">
+            <label for="personality-value"><h2>Personality (0-100)</h2></label>
+            <input type="range" id="personality-value" min="0" max="100" value="50">
+            <input type="number" id="personality-num" value="50" min="0" max="100">
+        </div>
+         <!-- button to customize personality -->
+         <button id="toggleButtonPersonality" class="toggle-button" onclick="toggleAppearance('hidden2', 'toggleButtonPersonality')">Customize </button>
+         <!-- personality traits labeled as fun and core-values -->
+            <div id="hidden2" class="hidden2">
+                <!-- Input for Fun -->
+                <div class="input-group">
+                    <label for="fun-value">Fun (0-100)</label>
+                    <input type="range" id="fun-value" min="0" max="100" value="50">
+                    <input type="number" id="fun-num" value="50" min="0" max="100">
+                </div>
+    
+                <!-- Input for Core Values -->
+                <div class="input-group">
+                    <label for="core-values-value">Core Values (0-100)</label>
+                    <input type="range" id="core-values-value" min="0" max="100" value="50">
+                    <input type="number" id="core-values-num" value="50" min="0" max="100">
+                </div>
+                
+                <!-- Input for Fun and Core Values weights -->
+                <div class="input-group">
+                    <label for="fun-weight">Fun Weight (%)</label>
+                    <input type="number" id="fun-weight" value="50" min="0" max="100" step="1">
+                </div>
+                <div class="input-group">
+                    <label for="core-values-weight">Core Values Weight (%)</label>
+                    <input type="number" id="core-values-weight" value="50" min="0" max="100" step="1"> 
+                </div>
+                <div class="fun-core-values-button">
+                    <button onclick="updateSubclass2()">Update</button>
+                </div>
+            </div>
+        <!-- Weight inputs -->
+        <div class="input-group">
+            <label for="appearance-weight"><h2>Appearance Weight (%)</h2></label>
+            <input type="number" id="appearance-weight" value="50" min="0" max="100" step="1">
+        </div>
+        <div class="input-group">
+            <label for="personality-weight"><h2>Personality Weight (%)</h2></label>
+            <input type="number" id="personality-weight" value="50" min="0" max="100" step="1">
         </div>
 
-        <!-- Input for Weights -->
-        <div class="input-group">
-            <label for="face-weight">Face Weight (%)</label>
-            <input type="number" id="face-weight" value="0" min="0" max="100" step="1">
-        </div>
-        <div class="input-group">
-            <label for="body-weight">Body Weight (%)</label>
-            <input type="number" id="body-weight" value="0" min="0" max="100" step="1">
-        </div>
-        <div class="input-group">
-            <label for="personality-weight">Personality Weight (%)</label>
-            <input type="number" id="personality-weight" value="0" min="0" max="100" step="1">
-        </div>
-        <div class="input-group-button">
-            <button onclick="adjustWeights()">Update Weights</button>
-        </div>
+        
+        <button onclick="calculateScore()" class="calculate-button">Calculate Score</button>
+
         <!-- Result -->
         <div class="result" id="result"></div>
         <div class="error" id="error"></div>
     </div>
 
     <script>
-        // Helper function for integer division
-        function intDivision(dividend, divisor) {
-            return (dividend / divisor) | 0; // Bitwise OR with 0 truncates towards zero
+        // Synchronize slider and input fields
+        function syncInputs(sliderId, numId) {
+            const slider = document.getElementById(sliderId);
+            const number = document.getElementById(numId);
+
+            slider.addEventListener("input", () => {
+                number.value = slider.value;
+            });
+
+            number.addEventListener("input", () => {
+                slider.value = number.value;
+            });
         }
 
-        // Synchronize the slider and number input for Face
-        document.getElementById("face-value").addEventListener("input", function() {
-            document.getElementById("face-num").value = this.value;
-            calculateScore();
-        });
-        document.getElementById("face-num").addEventListener("input", function() {
-            document.getElementById("face-value").value = this.value;
-            calculateScore();
-        });
+        syncInputs("appearance-value", "appearance-num");
+        syncInputs("personality-value", "personality-num");
+        syncInputs("face-value", "face-num");
+        syncInputs("body-value", "body-num");
+        syncInputs("fun-value", "fun-num");
+        syncInputs("core-values-value", "core-values-num");
+        
 
-        // Synchronize the slider and number input for Body
-        document.getElementById("body-value").addEventListener("input", function() {
-            document.getElementById("body-num").value = this.value;
-            calculateScore();
-        });
-        document.getElementById("body-num").addEventListener("input", function() {
-            document.getElementById("body-value").value = this.value;
-            calculateScore();
-        });
+        // Toggle appearance customization
+        function toggleAppearance(id, button) {
+            const toggleContent = document.getElementById(id);
+            const toggleButton = document.getElementById(button);
 
-        // Synchronize the slider and number input for Personality
-        document.getElementById("personality-value").addEventListener("input", function() {
-            document.getElementById("personality-num").value = this.value;
-            calculateScore();
-        });
-        document.getElementById("personality-num").addEventListener("input", function() {
-            document.getElementById("personality-value").value = this.value;
-            calculateScore();
-        });
-
-      
-
-        // Function to adjust weights when one weight is modified
-        function adjustWeights(changedWeight) {
-            let faceWeight = parseInt(document.getElementById("face-weight").value);
-            let bodyWeight = parseInt(document.getElementById("body-weight").value);
-            let personalityWeight = parseInt(document.getElementById("face-weight").value);
-
-            // Ensure all the weights eqaul to 100% or return an error
-             
-            if (faceWeight + bodyWeight + personalityWeight !== 100) {
-                document.getElementById("error").textContent = "Error: Weights must sum to 100%!";
-                document.getElementById("result").textContent = "";
-                calculateScore();
-            }
-        }
-
-        // Function to calculate the total score
-        function calculateScore() {
-            const faceValue = parseInt(document.getElementById("face-num").value);
-            const bodyValue = parseInt(document.getElementById("body-num").value);
-            const personalityValue = parseInt(document.getElementById("personality-num").value);
-
-            const faceWeight = parseInt(document.getElementById("face-weight").value) / 100;
-            const bodyWeight = parseInt(document.getElementById("body-weight").value) / 100;
-            const personalityWeight = parseInt(document.getElementById("personality-weight").value) / 100;
-
-            // Check if weights sum up to 100%
-            if (Math.abs((faceWeight + bodyWeight + personalityWeight) - 1) > 0.01) {
-                document.getElementById("error").textContent = "Error: Weights must sum to 100%!";
-                document.getElementById("result").textContent = "";
-                return;
+            // Toggle the 'hidden' class
+            if (toggleContent.classList.contains(id)) {
+                toggleContent.classList.remove(id);
+                toggleButton.textContent = 'Show Less'; // Change button text
             } else {
-                document.getElementById("error").textContent = "";
+                toggleContent.classList.add(id);
+                toggleButton.textContent = 'Show More'; // Change button text
+            }
+        }
+        function updateSubclass1() {
+            // check if the face and body values are valid
+            let faceValue = parseInt(document.getElementById("face-num").value) || 0;
+            let bodyValue = parseInt(document.getElementById("body-num").value) || 0;
+            let faceWeight = parseInt(document.getElementById("face-weight").value) || 0;
+            let bodyWeight = parseInt(document.getElementById("body-weight").value) || 0;
+
+            // Validate weights
+            const totalWeight = faceWeight + bodyWeight;
+            const errorDiv = document.getElementById("error");
+            if (totalWeight !== 100) {
+                errorDiv.textContent = "Error: Weights must sum to 100%!";
+                return;
+            }
+            errorDiv.textContent = "";
+            //validate the face and body values
+            if (faceValue < 0 || faceValue > 100 || bodyValue < 0 || bodyValue > 100) {
+                errorDiv.textContent = "Error: Face and Body values must be between 0 and 100!";
+                return;
+            }
+            errorDiv.textContent = "";
+            //calculate and update the appearance value
+            faceValue = faceValue * (faceWeight / 100);
+            bodyValue = bodyValue * (bodyWeight / 100);
+            document.getElementById("appearance-num").value = (faceValue + bodyValue);
+        }
+        // update subclass 2
+        function updateSubclass2() {
+            // check if the fun and core values values are valid
+            let funValue = parseInt(document.getElementById("fun-num").value) || 0;
+            let coreValuesValue = parseInt(document.getElementById("core-values-num").value) || 0;
+            let funWeight = parseInt(document.getElementById("fun-weight").value) || 0;
+            let coreValuesWeight = parseInt(document.getElementById("core-values-weight").value) || 0;
+
+            // Validate weights
+            const totalWeight = funWeight + coreValuesWeight;
+            const errorDiv = document.getElementById("error");
+            if (totalWeight !== 100) {
+                errorDiv.textContent = "Error: Weights must sum to 100%!";
+                return;
+            }
+            errorDiv.textContent = "";
+            //validate the fun and core values values
+            if (funValue < 0 || funValue > 100 || coreValuesValue < 0 || coreValuesValue > 100) {
+                errorDiv.textContent = "Error: Fun and Core Values values must be between 0 and 100!";
+                return;
+            }
+            errorDiv.textContent = "";
+            //calculate and update the appearance value
+            funValue = funValue * (funWeight / 100);
+            coreValuesValue = coreValuesValue * (coreValuesWeight / 100);
+            document.getElementById("personality-num").value = (funValue + coreValuesValue);
+        }
+        // Calculate and validate scores
+        function calculateScore() {
+            const appearanceValue = parseInt(document.getElementById("appearance-num").value) || 0;
+            const personalityValue = parseInt(document.getElementById("personality-num").value) || 0;
+
+            const appearanceWeight = parseInt(document.getElementById("appearance-weight").value) || 0;
+            const personalityWeight = parseInt(document.getElementById("personality-weight").value) || 0;
+
+            // Validate weights
+            const totalWeight = appearanceWeight + personalityWeight;
+            const errorDiv = document.getElementById("error");
+            const resultDiv = document.getElementById("result");
+
+            if (totalWeight !== 100) {
+                errorDiv.textContent = "Error: Weights must sum to 100%!";
+                resultDiv.textContent = "";
+                return;
             }
 
-            // Calculate the total score
-            const totalScore = (faceValue * faceWeight) + (bodyValue * bodyWeight) + (personalityValue * personalityWeight);
-            document.getElementById("result").textContent = "Total Score: " + totalScore.toFixed(2);
-        }
+            errorDiv.textContent = "";
 
-        // Initial calculation on page load
+            // Calculate total score
+            const totalScore = (appearanceValue * (appearanceWeight / 100)) +
+                               (personalityValue * (personalityWeight / 100));
+
+            resultDiv.textContent = `Total Score: ${totalScore.toFixed(2)}`;
+        }
+        // Initial calculation
         calculateScore();
+
     </script>
 
 </body>
