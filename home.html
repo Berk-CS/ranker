@@ -71,27 +71,30 @@
         <!-- Input for Weights -->
         <div class="input-group">
             <label for="face-weight">Face Weight (%)</label>
-            <input type="number" id="face-weight" value="34" min="0" max="100" step="1">
+            <input type="number" id="face-weight" value="0" min="0" max="100" step="1">
         </div>
         <div class="input-group">
             <label for="body-weight">Body Weight (%)</label>
-            <input type="number" id="body-weight" value="33" min="0" max="100" step="1">
+            <input type="number" id="body-weight" value="0" min="0" max="100" step="1">
         </div>
         <div class="input-group">
             <label for="personality-weight">Personality Weight (%)</label>
-            <input type="number" id="personality-weight" value="33" min="0" max="100" step="1">
+            <input type="number" id="personality-weight" value="0" min="0" max="100" step="1">
         </div>
-
+        <div class="input-group-button">
+            <button onclick="adjustWeights()">Update Weights</button>
+        </div>
         <!-- Result -->
         <div class="result" id="result"></div>
         <div class="error" id="error"></div>
     </div>
 
     <script>
-        //helper function 
+        // Helper function for integer division
         function intDivision(dividend, divisor) {
             return (dividend / divisor) | 0; // Bitwise OR with 0 truncates towards zero
         }
+
         // Synchronize the slider and number input for Face
         document.getElementById("face-value").addEventListener("input", function() {
             document.getElementById("face-num").value = this.value;
@@ -121,93 +124,25 @@
             document.getElementById("personality-value").value = this.value;
             calculateScore();
         });
-        // Synchronize the weight inputs
-        document.getElementById("face-weight").addEventListener("input", function() {
-            adjustWeights("face");
-            calculateScore();
-        });
-        document.getElementById("body-weight").addEventListener("input", function() {
-            adjustWeights("body");
-            calculateScore();
-        });
-        document.getElementById("personality-weight").addEventListener("input", function() {
-            adjustWeights("personality");
-            calculateScore();
-        });
 
-        let prevFaceWeight = 34;
-        let prevBodyWeight = 33;
-        let prevPersonalityWeight = 33;
-        // Function to adjust the weights based on Face
+      
+
+        // Function to adjust weights when one weight is modified
         function adjustWeights(changedWeight) {
-             // prev weights
-            //weights 
-            let faceWeight = 0;
-            let bodyWeight = 0;
-            let personalityWeight = 0;
-    // Get the changed weight and set the rest to the prev values
-    if (changedWeight === "face") {
-        faceWeight = parseInt(document.getElementById("face-weight").value);
-        bodyWeight = prevBodyWeight;
-        personalityWeight = prevPersonalityWeight;
-    }
-    else if (changedWeight === "body") {
-        faceWeight = prevFaceWeight;
-        bodyWeight = parseInt(document.getElementById("body-weight").value);
-        personalityWeight = prevPersonalityWeight;
-    } 
+            let faceWeight = parseInt(document.getElementById("face-weight").value);
+            let bodyWeight = parseInt(document.getElementById("body-weight").value);
+            let personalityWeight = parseInt(document.getElementById("face-weight").value);
 
-    const maxWeight = 100;
-    // Determine which weight was changed
-    let change = 0;
-    if (faceWeight !== prevFaceWeight) {
-        // Face weight was changed
-        console.log("Face weight was changed, prevFaceWeight: ", prevFaceWeight, " faceWeight: ", faceWeight);
-        change = prevFaceWeight - faceWeight;
-        prevFaceWeight = faceWeight;
-
-        if (change % 2 === 0) {
-            bodyWeight += change / 2;
-            personalityWeight += change / 2;
-        } else {
-            bodyWeight += intDivision(change, 2);
-            personalityWeight += intDivision(change, 2);
-            bodyWeight += change % 2; // Add the remainder to body
-            prevBodyWeight = bodyWeight;
-        }
-    } else if (bodyWeight !== prevBodyWeight) {
-        // Body weight was changed
-        change = prevBodyWeight - bodyWeight;
-        prevBodyWeight = bodyWeight;
-        // if the absolute value of change is less than personality weight, add the entire change to personaity weight
-        if (Math.abs(change) <= personalityWeight) {
-            personalityWeight += change; // Add the entire change to personality
-        } else {
-            if (change < 0) {
-                change += personalityWeight;
-                personalityWeight = 0;
-                faceWeight += change;
-            } else {
-                personalityWeight += change;
+            // Ensure all the weights eqaul to 100% or return an error
+             
+            if (faceWeight + bodyWeight + personalityWeight !== 100) {
+                document.getElementById("error").textContent = "Error: Weights must sum to 100%!";
+                document.getElementById("result").textContent = "";
+                calculateScore();
             }
         }
-    }
 
-    // return an error if any of the weights are negative or the sum is not 100
-    if (faceWeight < 0 || bodyWeight < 0 || personalityWeight < 0 || (faceWeight + bodyWeight + personalityWeight) !== maxWeight) {
-        document.getElementById("error").textContent = "Error: Weights must be positive and sum to 100!";
-        return;
-    } 
-
-    // Update the weight inputs
-    document.getElementById("face-weight").value = faceWeight;
-    document.getElementById("body-weight").value = bodyWeight;
-    document.getElementById("personality-weight").value = personalityWeight;
-    // Disable Personality input to prevent manual changes
-    document.getElementById("personality-weight").disabled = true;
-}
-
-        // Function to calculate total score
+        // Function to calculate the total score
         function calculateScore() {
             const faceValue = parseInt(document.getElementById("face-num").value);
             const bodyValue = parseInt(document.getElementById("body-num").value);
@@ -217,7 +152,7 @@
             const bodyWeight = parseInt(document.getElementById("body-weight").value) / 100;
             const personalityWeight = parseInt(document.getElementById("personality-weight").value) / 100;
 
-            // Check if weights sum up to 100
+            // Check if weights sum up to 100%
             if (Math.abs((faceWeight + bodyWeight + personalityWeight) - 1) > 0.01) {
                 document.getElementById("error").textContent = "Error: Weights must sum to 100%!";
                 document.getElementById("result").textContent = "";
