@@ -6,187 +6,176 @@
     <title>Partner Ranking</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f9fafc;
+            font-family: 'Roboto', sans-serif;
+            background-color: #eef2f7;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
+            color: #444;
         }
         .container {
             max-width: 400px;
-            margin: 0 auto;
-            background-color: #ffffff;
+            margin: 15px auto;
+            background: linear-gradient(145deg, #ffffff, #e3e7ed);
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
         h1 {
             text-align: center;
-            color: #333;
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 15px;
         }
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: #555;
+            margin-bottom: 4px;
+            font-size: 13px;
+            font-weight: 500;
         }
-        input[type="range"], input[type="number"] {
+        input[type="range"] {
             width: 100%;
-            padding: 5px;
-            font-size: 14px;
-            margin-bottom: 5px;
+            margin: 6px 0;
         }
         input[type="number"] {
+            width: 100%;
+            padding: 6px;
+            font-size: 13px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
+            padding: 8px;
+            font-size: 14px;
+            font-weight: bold;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 6px;
             cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #2980b9;
+            transform: translateY(-1px);
         }
-        .result {
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 20px;
-            color: #333;
-        }
-        .error {
-            color: red;
-            font-size: 13px;
-            text-align: center;
-        }
-        .hidden1 {
-            display: none;
-        }
-        .hidden2 {
-            display: none;
-        }
-        .toggle-button {
-            cursor: pointer;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-        .toggle-button:hover {
-            /* background-color: #a0b53f; */
+        button:active {
+            transform: translateY(0);
         }
         .calculate-button {
-           background-color: rgb(41, 168, 41);
+            background-color: #27ae60;
+        }
+        .calculate-button:hover {
+            background-color: #229954;
+        }
+        .hidden1, .hidden2 {
+            display: none;
+        }
+        .result {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            color: #16a085;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 12px;
+            text-align: center;
+        }
+        .toggle-button {
+            background-color: #8e44ad;
+            color: white;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .toggle-button:hover {
+            background-color: #71368a;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Partner Ranking</h1>
-        <!-- input for appearance -->
+
+        <!-- Appearance Input -->
         <div class="input-group">
-            <label for="face-value"><h2>Appearance (0-100)</h2></label>
-            <input type="range" id="appearance-value" min="0" max="100" value="50">
-            <input type="number" id="appearance-num" value="50" min="0" max="100">
+            <label for="appearance-value">Appearance (0-100)</label>
+            <input type="range" id="appearance-value" min="0" max="100" value="70">
+            <input type="number" id="appearance-num" value="70" min="0" max="100">
         </div>
 
-        <!-- button to customize appearance -->
-        <button id="toggleButtonAppearance" class="toggle-button" onclick="toggleAppearance('hidden1', 'toggleButtonAppearance')">Customize</button>
+        <button id="toggleButtonAppearance" class="toggle-button" onclick="toggleAppearance('hidden1', 'toggleButtonAppearance')">Customize Appearance</button>
         <div id="hidden1" class="hidden1">
-            <!-- Input for Face -->
             <div class="input-group">
                 <label for="face-value">Face (0-100)</label>
-                <input type="range" id="face-value" min="0" max="100" value="50">
-                <input type="number" id="face-num" value="50" min="0" max="100">
+                <input type="range" id="face-value" min="0" max="100" value="70">
+                <input type="number" id="face-num" value="70" min="0" max="100">
             </div>
-
-            <!-- Input for Body -->
             <div class="input-group">
                 <label for="body-value">Body (0-100)</label>
-                <input type="range" id="body-value" min="0" max="100" value="50">
-                <input type="number" id="body-num" value="50" min="0" max="100">
+                <input type="range" id="body-value" min="0" max="100" value="70">
+                <input type="number" id="body-num" value="70" min="0" max="100">
             </div>
-            
-            <!-- Input for Face and Body weights -->
             <div class="input-group">
                 <label for="face-weight">Face Weight (%)</label>
-                <input type="number" id="face-weight" value="50" min="0" max="100" step="1">
+                <input type="number" id="face-weight" value="60" min="0" max="100">
             </div>
             <div class="input-group">
                 <label for="body-weight">Body Weight (%)</label>
-                <input type="number" id="body-weight" value="50" min="0" max="100" step="1"> 
+                <input type="number" id="body-weight" value="40" min="0" max="100">
             </div>
-            <div class="face-body-button">
-                <button onclick="updateSubclass1()">Update</button>
-            </div>
+            <button onclick="updateSubclass1()">Update Appearance</button>
         </div>
 
-        <!-- Input for Personality -->
+        <!-- Personality Input -->
         <div class="input-group">
-            <label for="personality-value"><h2>Personality (0-100)</h2></label>
-            <input type="range" id="personality-value" min="0" max="100" value="50">
-            <input type="number" id="personality-num" value="50" min="0" max="100">
-        </div>
-         <!-- button to customize personality -->
-         <button id="toggleButtonPersonality" class="toggle-button" onclick="toggleAppearance('hidden2', 'toggleButtonPersonality')">Customize </button>
-         <!-- personality traits labeled as fun and core-values -->
-            <div id="hidden2" class="hidden2">
-                <!-- Input for Fun -->
-                <div class="input-group">
-                    <label for="fun-value">Fun (0-100)</label>
-                    <input type="range" id="fun-value" min="0" max="100" value="50">
-                    <input type="number" id="fun-num" value="50" min="0" max="100">
-                </div>
-    
-                <!-- Input for Core Values -->
-                <div class="input-group">
-                    <label for="core-values-value">Core Values (0-100)</label>
-                    <input type="range" id="core-values-value" min="0" max="100" value="50">
-                    <input type="number" id="core-values-num" value="50" min="0" max="100">
-                </div>
-                
-                <!-- Input for Fun and Core Values weights -->
-                <div class="input-group">
-                    <label for="fun-weight">Fun Weight (%)</label>
-                    <input type="number" id="fun-weight" value="50" min="0" max="100" step="1">
-                </div>
-                <div class="input-group">
-                    <label for="core-values-weight">Core Values Weight (%)</label>
-                    <input type="number" id="core-values-weight" value="50" min="0" max="100" step="1"> 
-                </div>
-                <div class="fun-core-values-button">
-                    <button onclick="updateSubclass2()">Update</button>
-                </div>
-            </div>
-        <!-- Weight inputs -->
-        <div class="input-group">
-            <label for="appearance-weight"><h2>Appearance Weight (%)</h2></label>
-            <input type="number" id="appearance-weight" value="50" min="0" max="100" step="1">
-        </div>
-        <div class="input-group">
-            <label for="personality-weight"><h2>Personality Weight (%)</h2></label>
-            <input type="number" id="personality-weight" value="50" min="0" max="100" step="1">
+            <label for="personality-value">Personality (0-100)</label>
+            <input type="range" id="personality-value" min="0" max="100" value="70">
+            <input type="number" id="personality-num" value="70" min="0" max="100">
         </div>
 
-        
+        <button id="toggleButtonPersonality" class="toggle-button" onclick="toggleAppearance('hidden2', 'toggleButtonPersonality')">Customize Personality</button>
+        <div id="hidden2" class="hidden2">
+            <div class="input-group">
+                <label for="fun-value">Fun (0-100)</label>
+                <input type="range" id="fun-value" min="0" max="100" value="70">
+                <input type="number" id="fun-num" value="70" min="0" max="100">
+            </div>
+            <div class="input-group">
+                <label for="core-values-value">Core Values (0-100)</label>
+                <input type="range" id="core-values-value" min="0" max="100" value="70">
+                <input type="number" id="core-values-num" value="70" min="0" max="100">
+            </div>
+            <div class="input-group">
+                <label for="fun-weight">Fun Weight (%)</label>
+                <input type="number" id="fun-weight" value="40" min="0" max="100">
+            </div>
+            <div class="input-group">
+                <label for="core-values-weight">Core Values Weight (%)</label>
+                <input type="number" id="core-values-weight" value="60" min="0" max="100">
+            </div>
+            <button onclick="updateSubclass2()">Update Personality</button>
+        </div>
+
+        <!-- Overall Weights -->
+        <div class="input-group">
+            <label for="appearance-weight">Appearance Weight (%)</label>
+            <input type="number" id="appearance-weight" value="45" min="0" max="100">
+        </div>
+        <div class="input-group">
+            <label for="personality-weight">Personality Weight (%)</label>
+            <input type="number" id="personality-weight" value="55" min="0" max="100">
+        </div>
+
         <button onclick="calculateScore()" class="calculate-button">Calculate Score</button>
 
-        <!-- Result -->
         <div class="result" id="result"></div>
         <div class="error" id="error"></div>
     </div>
-
     <script>
         // Synchronize slider and input fields
         function syncInputs(sliderId, numId) {
@@ -221,7 +210,7 @@
                 toggleButton.textContent = 'Show Less'; // Change button text
             } else {
                 toggleContent.classList.add(id);
-                toggleButton.textContent = 'Show More'; // Change button text
+                toggleButton.textContent = 'Customize'; // Change button text
             }
         }
         function updateSubclass1() {
@@ -236,12 +225,14 @@
             const errorDiv = document.getElementById("error");
             if (totalWeight !== 100) {
                 errorDiv.textContent = "Error: Weights must sum to 100%!";
+                alert("Error: Weights must sum to 100%!");
                 return;
             }
             errorDiv.textContent = "";
             //validate the face and body values
             if (faceValue < 0 || faceValue > 100 || bodyValue < 0 || bodyValue > 100) {
                 errorDiv.textContent = "Error: Face and Body values must be between 0 and 100!";
+                alert("Error: Face and Body values must be between 0 and 100!");
                 return;
             }
             errorDiv.textContent = "";
@@ -263,6 +254,7 @@
             const errorDiv = document.getElementById("error");
             if (totalWeight !== 100) {
                 errorDiv.textContent = "Error: Weights must sum to 100%!";
+                alert("Error: Weights must sum to 100%!");
                 return;
             }
             errorDiv.textContent = "";
@@ -301,7 +293,6 @@
             // Calculate total score
             const totalScore = (appearanceValue * (appearanceWeight / 100)) +
                                (personalityValue * (personalityWeight / 100));
-
             resultDiv.textContent = `Total Score: ${totalScore.toFixed(2)}`;
         }
         // Initial calculation
