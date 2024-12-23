@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Partner Ranking</title>
+    <title>Crush Rating</title>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -15,7 +15,7 @@
         .container {
             max-width: 400px;
             margin: 15px auto;
-            background: linear-gradient(145deg, #ffffff, #e3e7ed);
+            background: linear-gradient(145deg, #ffffff, #9e9fa1);
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
@@ -97,47 +97,122 @@
         .toggle-button:hover {
             background-color: #71368a;
         }
+        .result {
+            /* background-color: rgb(17, 17, 17); */
+        }
+        /* Legend Box Styles */
         .legend-box {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: #f7f7f7;
+            background: #bfb9b9;
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 8px 12px;
+            padding: 10px;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
             font-size: 12px;
+            width: 240px; /* Adjust width for proper alignment */
         }
-        .legend-box .legend-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 2px 0;
+
+        .legend-box h2 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #2c3e50;
         }
-    </style>
+
+        .legend-items {
+            padding-top: 5px;
+        }
+        .legend-item {
+            display: grid;
+            grid-template-columns: 1fr 2fr; /* Score range and description columns */
+            gap: 8px;
+            margin: 6px 0;
+        }
+
+        .grade {
+            font-weight: bold;
+        }
+
+        /* Grade colors */
+        .grade.a-plus {
+            color: skyblue; /* sky blue for A+ */
+            /* make it bold */
+            font-weight: bold;
+            background-color: #957b0b;
+        }
+
+        .grade.a {
+            color: green; /* darker green for A */
+            /* background-color: white; */
+        }
+
+        .grade.b-plus {
+            color: lightgreen; /* green for B+ */
+            /* background-color: black; */
+        }
+
+        .grade.b {
+            color: yellow; /* light yellow for B */
+            /* background-color: black; */
+        }
+
+        .grade.c-plus {
+            color: rgba(197, 197, 92, 0.393); /* Yellow for C+ */
+            background-color: #6A0DAD;
+        }
+
+        .grade.c {
+            color: orange; /* Orange for C */
+            background-color: blue;
+            /* background-color: black; */
+        }
+
+        .grade.f {
+            color: red; /* Red for F */
+            /* background-color: black; */
+        }
+</style>
+
 </head>
 <body>
      <!-- Legend Box -->
      <div class="legend-box">
         <h2>Score to Grade Mapping</h2>
-        <div class="legend-item">
-            <span>95-100</span> <span>Flawless...A+</span>
+        <div class="legend-items">
+            <div class="legend-item">
+                <span>95-100</span>
+                <span><span class="grade a-plus">A+</span>: Flawless</span>
+            </div>
+            <div class="legend-item">
+                <span>90-94</span>
+                <span><span class="grade a">A</span>: Excellent</span>
+            </div>
+            <div class="legend-item">
+                <span>85-89</span>
+                <span><span class="grade b-plus">B+</span>: Very Good</span>
+            </div>
+            <div class="legend-item">
+                <span>80-84</span>
+                <span><span class="grade b">B</span>: Good</span>
+            </div>
+            <div class="legend-item">
+                <span>75-79</span>
+                <span><span class="grade c-plus">C+</span>: Decent</span>
+            </div>
+            <div class="legend-item">
+                <span>70-74</span>
+                <span><span class="grade c">C</span>: Acceptable</span>
+            </div>
+            <div class="legend-item">
+                <span>Below 70</span>
+                <span><span class="grade f">F</span>: Deal Breaker</span>
+            </div>
         </div>
-        <div class="legend-item">
-            <span>90-94</span> <span>Excellent....A</span>
-        </div>
-        <div class="legend-item">
-            <span>85-89</span> <span>Very good....B+</span>
-        </div>
-        <div class="legend-item">
-            <span>80-84</span> <span>Good....B</span>
-        </div>
-        <div class="legend-item">
-            <span>75-79</span> <span>Decent....C+</span>
-        </div>
-        <div class="legend-item">
-            <span>70-74</span> <span>Acceptable....C</span>
-        </div>
-        <div class="legend-item">
+    </div>
+    
+        <!-- <div class="legend-item">
             <span>60-69</span> <span>Substandard....D</span>
         </div>
         <div class="legend-item">
@@ -145,11 +220,10 @@
         </div>
         <div class="legend-item">
             <span>Below 50</span> <span>Unacceptable....F</span>
-        </div>
-    </div>
+        </div> -->
 
     <div class="container">
-        <h1>Partner Ranking</h1>
+        <h1>Crush Rating</h1>
         <!-- Appearance Input -->
         <div class="input-group">
             <label for="appearance-value">Appearance (0-100)</label>
@@ -342,7 +416,31 @@
             // Calculate total score
             const totalScore = (appearanceValue * (appearanceWeight / 100)) +
                                (personalityValue * (personalityWeight / 100));
-            resultDiv.textContent = `Total Score: ${totalScore.toFixed(2)}`;
+            //give a letter grade based on the total score
+            let grade = "";
+            if (totalScore >= 95) {
+                grade = "A+";
+                gradeClass = "grade a-plus";
+            } else if (totalScore >= 90) {
+                grade = "A";
+                gradeClass = "grade a";
+            } else if (totalScore >= 85) {
+                grade = "B+";
+                gradeClass = "grade b-plus";
+            } else if (totalScore >= 80) {
+                grade = "B";
+                gradeClass = "grade b";
+            } else if (totalScore >= 75) {
+                grade = "C+";
+                gradeClass = "grade c-plus";
+            } else if (totalScore >= 70) {
+                grade = "C";
+                gradeClass = "grade c";
+            } else {
+                grade = "F";
+                gradeClass = "grade f";
+            }
+            resultDiv.innerHTML = `Total Score: ${totalScore.toFixed(2)} /  <span class="${gradeClass}">${grade}</span>`;
         }
         // Initial calculation
         calculateScore();
