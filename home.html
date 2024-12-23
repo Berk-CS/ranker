@@ -19,6 +19,7 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
         }
         h1 {
             text-align: center;
@@ -96,12 +97,59 @@
         .toggle-button:hover {
             background-color: #71368a;
         }
+        .legend-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #f7f7f7;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 12px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            font-size: 12px;
+        }
+        .legend-box .legend-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0;
+        }
     </style>
 </head>
 <body>
+     <!-- Legend Box -->
+     <div class="legend-box">
+        <h2>Score to Grade Mapping</h2>
+        <div class="legend-item">
+            <span>95-100</span> <span>Flawless...A+</span>
+        </div>
+        <div class="legend-item">
+            <span>90-94</span> <span>Excellent....A</span>
+        </div>
+        <div class="legend-item">
+            <span>85-89</span> <span>Very good....B+</span>
+        </div>
+        <div class="legend-item">
+            <span>80-84</span> <span>Good....B</span>
+        </div>
+        <div class="legend-item">
+            <span>75-79</span> <span>Decent....C+</span>
+        </div>
+        <div class="legend-item">
+            <span>70-74</span> <span>Acceptable....C</span>
+        </div>
+        <div class="legend-item">
+            <span>60-69</span> <span>Substandard....D</span>
+        </div>
+        <div class="legend-item">
+            <span>50-59</span> <span>Very substandard....E</span>
+        </div>
+        <div class="legend-item">
+            <span>Below 50</span> <span>Unacceptable....F</span>
+        </div>
+    </div>
+
     <div class="container">
         <h1>Partner Ranking</h1>
-
         <!-- Appearance Input -->
         <div class="input-group">
             <label for="appearance-value">Appearance (0-100)</label>
