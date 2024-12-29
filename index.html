@@ -10,12 +10,13 @@
             background-color: #eef2f7;
             margin: 0;
             padding: 15px;
-            color: #444;
+            color: #e8dddd;
         }
         .container {
             max-width: 400px;
             margin: 15px auto;
-            background: linear-gradient(145deg, #646363, #ffffff);
+            /* margin-top: 250px; */
+            background: linear-gradient(145deg, #98a09e, #1f1f1f);
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
@@ -25,7 +26,8 @@
             text-align: center;
             font-size: 27px;
             /* color: #2c3e50; */
-            color:#080908;
+            color:#000000;
+            text-shadow: #ccc 1px 1px 2px;
             margin-bottom: 15px;
         }
         .input-group {
@@ -37,7 +39,7 @@
             margin-bottom: 4px;
             font-size: 16px;
             font-weight: 500;
-            color:#0a0a0a;
+            color:#f3ecec;
         }
         input[type="range"] {
             width: 100%;
@@ -83,7 +85,7 @@
             font-weight: bold;
             text-align: center;
             margin-top: 15px;
-            color: #0a0e0d;
+            color: #c8d2d0;
         }
         .error {
             color: #e74c3c;
@@ -104,13 +106,13 @@
         }
         /* Legend Box Styles */
         .legend-box {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #bfb9b9;
+            /* position: absolute; */
+            /* top: 10px;
+            left: 10px; */
+            background: #000000;
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 10px;
+            /* padding: 10px; */
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
             font-size: 12px;
             width: 240px; /* Adjust width for proper alignment */
@@ -120,7 +122,7 @@
             font-size: 14px;
             margin-bottom: 10px;
             text-align: center;
-            color: #2c3e50;
+            color: #dfe6ec;
         }
 
         .legend-items {
@@ -138,43 +140,48 @@
         }
 
         /* Grade colors */
-        .grade.a-plus {
-            color: skyblue; /* sky blue for A+ */
-            /* make it bold */
-            font-weight: bold;
-            background-color: #957b0b;
-        }
+.grade.a-plus {
+    color: skyblue;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
 
-        .grade.a {
-            color: green; /* darker green for A */
-            /* background-color: white; */
-        }
+.grade.a {
+    color: green;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
 
-        .grade.b-plus {
-            color: lightgreen; /* green for B+ */
-            /* background-color: black; */
-        }
+.grade.b-plus {
+    color: lightgreen;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
 
-        .grade.b {
-            color: yellow; /* light yellow for B */
-            /* background-color: black; */
-        }
+.grade.b {
+    color: yellow;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
 
-        .grade.c-plus {
-            color: rgba(197, 197, 92, 0.393); /* Yellow for C+ */
-            background-color: #6A0DAD;
-        }
+.grade.c-plus {
+    color: rgba(197, 197, 92, 0.8);
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
 
-        .grade.c {
-            color: orange; /* Orange for C */
-            background-color: blue;
-            /* background-color: black; */
-        }
+.grade.c {
+    color: orange;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
 
-        .grade.f {
-            color: red; /* Red for F */
-            /* background-color: black; */
-        }
+.grade.f {
+    color: red;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
 </style>
 
 </head>
@@ -185,31 +192,31 @@
         <div class="legend-items">
             <div class="legend-item">
                 <span>95-100</span>
-                <span><span class="grade a-plus">A+</span>: Flawless</span>
+                <span> Flawless — <span class="grade a-plus"> A+</span></span>
             </div>
             <div class="legend-item">
                 <span>90-94</span>
-                <span><span class="grade a">A</span>: Excellent</span>
+                <span> Excellent — <span class="grade a">A</span></span>
             </div>
             <div class="legend-item">
                 <span>85-89</span>
-                <span><span class="grade b-plus">B+</span>: Very Good</span>
+                <span>Very Good — <span class="grade b-plus">B+</span></span>
             </div>
             <div class="legend-item">
                 <span>80-84</span>
-                <span><span class="grade b">B</span>: Good</span>
+                <span>Good — <span class="grade b">B</span></span>
             </div>
             <div class="legend-item">
                 <span>75-79</span>
-                <span><span class="grade c-plus">C+</span>: Decent</span>
+                <span>Decent — <span class="grade c-plus">C+</span></span>
             </div>
             <div class="legend-item">
                 <span>70-74</span>
-                <span><span class="grade c">C</span>: Acceptable</span>
+                <span>Acceptable — <span class="grade c">C</span></span>
             </div>
             <div class="legend-item">
                 <span>Below 70</span>
-                <span><span class="grade f">F</span>: Deal Breaker</span>
+                <span>Deal Breaker — <span class="grade f">F</span></span>
             </div>
         </div>
     </div>
@@ -233,7 +240,7 @@
             <input type="number" id="appearance-num" value="70" min="0" max="100">
         </div>
 
-        <button id="toggleButtonAppearance" class="toggle-button" onclick="toggleAppearance('hidden1', 'toggleButtonAppearance')">Customize Appearance</button>
+        <button id="toggleButtonAppearance" class="toggle-button" onclick="toggleAppearance('hidden1', 'toggleButtonAppearance')">Customize</button>
         <div id="hidden1" class="hidden1">
             <div class="input-group">
                 <label for="face-value">Face (0-100)</label>
@@ -442,6 +449,7 @@
                 grade = "F";
                 gradeClass = "grade f";
             }
+            // resultDiv.innerHTML = `Total Score: ${totalScore.toFixed(2)} /  ${grade}`;
             resultDiv.innerHTML = `Total Score: ${totalScore.toFixed(2)} /  <span class="${gradeClass}">${grade}</span>`;
         }
         // Initial calculation
