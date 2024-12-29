@@ -181,6 +181,38 @@
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 140px;
+    background-color: #555;
+    color: #ebe7e7;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the icon */
+    left: 50%;
+    margin-left: -70px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
 
 </style>
 
@@ -235,7 +267,10 @@
         <h1>Rating</h1>
         <!-- Appearance Input -->
         <div class="input-group">
-            <label for="appearance-value">Appearance (0-100)</label>
+            <label for="appearance-value">Appearance (0-100)<span class="tooltip">
+                ?
+                <span class="tooltip-text">Could be Hair, Eyes, Teeth</span>
+            </span></label>
             <input type="range" id="appearance-value" min="0" max="100" value="70">
             <input type="number" id="appearance-num" value="70" min="0" max="100">
         </div>
@@ -243,12 +278,22 @@
         <button id="toggleButtonAppearance" class="toggle-button" onclick="toggleAppearance('hidden1', 'toggleButtonAppearance')">Customize</button>
         <div id="hidden1" class="hidden1">
             <div class="input-group">
-                <label for="face-value">Face (0-100)</label>
+                <label for="face-value">Face (0-100) <span class="tooltip">
+                    ?
+                    <span class="tooltip-text">Could be Eyes, Nose, Lips</span>
+                </span>
+
+                </label>
                 <input type="range" id="face-value" min="0" max="100" value="70">
                 <input type="number" id="face-num" value="70" min="0" max="100">
             </div>
             <div class="input-group">
-                <label for="body-value">Body (0-100)</label>
+                <label for="body-value">Body (0-100) <span class="tooltip">
+                    ?
+                    <span class="tooltip-text">Could be Height, Weight, Shape</span>
+                </span>
+
+                </label>
                 <input type="range" id="body-value" min="0" max="100" value="70">
                 <input type="number" id="body-num" value="70" min="0" max="100">
             </div>
@@ -265,7 +310,12 @@
 
         <!-- Personality Input -->
         <div class="input-group">
-            <label for="personality-value">Personality (0-100)</label>
+            <label for="personality-value">Personality (0-100) <span class="tooltip">
+                ?
+                <span class="tooltip-text">Could be Humor, Kindness, Intelligence</span>
+            </span>
+
+            </label>
             <input type="range" id="personality-value" min="0" max="100" value="70">
             <input type="number" id="personality-num" value="70" min="0" max="100">
         </div>
@@ -273,12 +323,22 @@
         <button id="toggleButtonPersonality" class="toggle-button" onclick="toggleAppearance('hidden2', 'toggleButtonPersonality')">Customize Personality</button>
         <div id="hidden2" class="hidden2">
             <div class="input-group">
-                <label for="fun-value">Fun (0-100)</label>
+                <label for="fun-value">Fun (0-100) <span class="tooltip">
+                    ?
+                    <span class="tooltip-text">Could be Humor, Chemistry, how they make you feel</span>
+                </span>
+
+                </label>
                 <input type="range" id="fun-value" min="0" max="100" value="70">
                 <input type="number" id="fun-num" value="70" min="0" max="100">
             </div>
             <div class="input-group">
-                <label for="core-values-value">Core Values (0-100)</label>
+                <label for="core-values-value">Core Values (0-100)
+                    <span class="tooltip">
+                        ?
+                        <span class="tooltip-text">Could be Honesty, Integrity, Loyalty</span>
+                    </span>
+                </label>
                 <input type="range" id="core-values-value" min="0" max="100" value="70">
                 <input type="number" id="core-values-num" value="70" min="0" max="100">
             </div>
@@ -307,6 +367,21 @@
 
         <div class="result" id="result"></div>
         <div class="error" id="error"></div>
+           <!-- Add new section for saving score -->
+           <div class="input-group">
+            <label for="name-input">Name for the Score</label>
+            <input type="text" id="name-input" placeholder="Enter name here">
+        </div>
+        
+        <button onclick="saveScore()">Save Score</button>
+
+        <!-- Saved scores list -->
+        <h2>Saved Scores</h2>
+        <ul id="saved-scores-list"></ul>
+
+        <div class="result" id="result"></div>
+        <div class="error" id="error"></div>
+    </div>
     </div>
     <script>
         // Synchronize slider and input fields
@@ -454,6 +529,73 @@
         }
         // Initial calculation
         calculateScore();
+
+        // Function to save the score with a name
+        function saveScore() {
+            const name = document.getElementById('name-input').value.trim();
+            const resultDiv = document.getElementById('result').innerText;
+
+            if (!name) {
+                alert('Please enter a name for the score.');
+                return;
+            }
+
+            if (!resultDiv) {
+                alert('Please calculate a score before saving.');
+                return;
+            }
+
+            // Extract the score and grade from the result div
+            const scoreMatch = resultDiv //.match(/Total Score: ([\d.]+) /);
+            const gradeMatch = resultDiv //.match(/>(.*?)<\/span>/);
+            const score = scoreMatch ? parseFloat(scoreMatch[1]) : null;
+            const grade = gradeMatch ? gradeMatch[1] : null;
+
+            if (score === null || !grade) {
+                alert('No valid score to save.');
+                return;
+            }
+
+            // Save to local storage
+            const savedScores = JSON.parse(localStorage.getItem('savedScores')) || [];
+            savedScores.push({ name, score, grade });
+            localStorage.setItem('savedScores', JSON.stringify(savedScores));
+
+            alert('Score saved successfully!');
+            loadSavedScores(); // Refresh the saved scores list
+        }
+
+        // Function to load saved scores
+        function loadSavedScores() {
+            const savedScores = JSON.parse(localStorage.getItem('savedScores')) || [];
+            const savedScoresList = document.getElementById('saved-scores-list');
+            savedScoresList.innerHTML = '';
+
+            if (savedScores.length === 0) {
+                savedScoresList.innerHTML = '<li>No saved scores yet.</li>';
+                return;
+            }
+
+            savedScores.forEach(({ name, score, grade }, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    ${name}: ${score.toFixed(2)} (${grade})
+                    <button onclick="deleteScore(${index})">Delete</button>
+                `;
+                savedScoresList.appendChild(listItem);
+            });
+        }
+
+        // Function to delete a saved score
+        function deleteScore(index) {
+            const savedScores = JSON.parse(localStorage.getItem('savedScores')) || [];
+            savedScores.splice(index, 1);
+            localStorage.setItem('savedScores', JSON.stringify(savedScores));
+            loadSavedScores(); // Refresh the saved scores list
+        }
+
+        // Load saved scores on page load
+        document.addEventListener('DOMContentLoaded', loadSavedScores);
 
     </script>
 
