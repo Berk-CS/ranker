@@ -101,9 +101,6 @@
         .toggle-button:hover {
             background-color: #71368a;
         }
-        .result {
-            /* background-color: rgb(17, 17, 17); */
-        }
         /* Legend Box Styles */
         .legend-box {
             /* position: absolute; */
@@ -546,19 +543,19 @@
             }
 
             // Extract the score and grade from the result div
-            const scoreMatch = resultDiv //.match(/Total Score: ([\d.]+) /);
-            const gradeMatch = resultDiv //.match(/>(.*?)<\/span>/);
-            const score = scoreMatch ? parseFloat(scoreMatch[1]) : null;
-            const grade = gradeMatch ? gradeMatch[1] : null;
+            const scoreMatch = resultDiv.match(/Total Score: ([\d.]+) /);
+            const score = scoreMatch ? scoreMatch[0] : null;
+            // const gradeMatch = resultDiv.match(/<span[^>]*>(.*?)<\/span>/);
+            // const grade = gradeMatch ? gradeMatch[0] : null;
 
-            if (score === null || !grade) {
+            if (score === null ) {
                 alert('No valid score to save.');
                 return;
             }
 
             // Save to local storage
             const savedScores = JSON.parse(localStorage.getItem('savedScores')) || [];
-            savedScores.push({ name, score, grade });
+            savedScores.push({ name, score });
             localStorage.setItem('savedScores', JSON.stringify(savedScores));
 
             alert('Score saved successfully!');
@@ -576,10 +573,10 @@
                 return;
             }
 
-            savedScores.forEach(({ name, score, grade }, index) => {
+            savedScores.forEach(({ name, score }, index) => {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `
-                    ${name}: ${score.toFixed(2)} (${grade})
+                    ${name}: ${score}
                     <button onclick="deleteScore(${index})">Delete</button>
                 `;
                 savedScoresList.appendChild(listItem);
