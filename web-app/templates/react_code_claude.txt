@@ -1,0 +1,299 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Plus, RefreshCw } from 'lucide-react';
+
+const ScoringSystem = () => {
+  const [categories, setCategories] = useState([
+    {
+      id: 'appearance',
+      name: 'Appearance',
+      score: 50,
+      weight: 50,
+      subcategories: []
+    },
+    {
+      id: 'personality',
+      name: 'Personality',
+      score: 50,
+      weight: 50,
+      subcategories: []
+    }
+  ]);
+
+  const [finalScore, setFinalScore] = useState(0);
+
+  // Calculate final score based on all categories
+  useEffect(() => {
+    const score = categories.reduce((acc, cat) => {
+      return acc + (cat.score * cat.weight) / 100;
+    }, 0);
+    setFinalScore(score);
+  }, [categories]);
+
+  // Adjust weights to ensure they sum to 100
+  const balanceWeights = (updatedCategories, excludeId) => {
+    const totalWeight = updatedCategories.reduce((sum, cat) => 
+      cat.id !== excludeId ? sum + cat.weight : sum, 0);
+    
+    if (totalWeight > 100) {
+      const excess = totalWeight - 100;
+      const categoriesToAdjust = updatedCategories.filter(cat => cat.id !== excludeId);
+      const adjustment = excess / categoriesToAdjust.length;
+      
+      return updatedCategories.map(cat => 
+        cat.id !== excludeId ? {...cat, weight: cat.weight - adjustment} : cat
+      );
+    }
+    return updatedCategories;
+  };
+
+  const handleScoreChange = (categoryId, newScore) => {
+    setCategories(prev => prev.map(cat => 
+      cat.id === categoryId ? {...cat, score: newScore} : cat
+    ));
+  };
+
+  const handleWeightChange = (categoryId, newWeight) => {
+    setCategories(prev => {
+      const updated = prev.map(cat => 
+        cat.id === categoryId ? {...cat, weight: newWeight} : cat
+      );
+      return balanceWeights(updated, categoryId);
+    });
+  };
+
+  const addSubcategory = (categoryId, name) => {
+    setCategories(prev => prev.map(cat => {
+      if (cat.id === categoryId) {
+        const newSubcategory = {
+          id: `${categoryId}-${Date.now()}`,
+          name,
+          score: 50,
+          weight: 100 / (cat.subcategories.length + 1)
+        };
+        
+        // Adjust weights of existing subcategories
+        const updatedSubcategories = cat.subcategories.map(sub => ({
+          ...sub,
+          weight: 100 / (cat.subcategories.length + 1)
+        }));
+        
+        return {
+          ...cat,
+          subcategories: [...updatedSubcategories, newSubcategory]
+        };
+      }
+      return cat;
+    }));
+  };
+
+  const addCategory = (name) => {
+    const newCategory = {
+      id: `category-${Date.now()}`,
+      name,
+      score: 50,
+      weight: 0,
+      subcategories: []
+    };
+    
+    setCategories(prev => {
+      const equalWeight = Math.floor(100 / (prev.length + 1));
+      const updatedCategories = prev.map(cat => ({
+        ...cat,
+        weight: equalWeight
+      }));
+      return [...updatedCategories, {...newCategory, weight: equalWeight}];
+    });
+  };
+
+  const resetToDefault = () => {
+    setCategories([
+      {
+        id: 'appearance',
+        name: 'Appearance',
+        score: 50,
+        weight: 50,
+        subcategories: []
+      },
+      {
+        id: 'personality',
+        name: 'Personality',
+        score: 50,
+        weight: 50,
+        subcategories: []
+      }
+    ]);
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-4 space-y-6">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Final Score: {finalScore.toFixed(1)}</CardTitle>
+          <div className="space-x-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => addCategory(prompt('Enter category name:'))}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Category
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={resetToDefault}
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Reset
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {categories.map(category => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              onScoreChange={handleScoreChange}
+              onWeightChange={handleWeightChange}
+              onAddSubcategory={addSubcategory}
+            />
+          ))}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+const CategoryCard = ({ category, onScoreChange, onWeightChange, onAddSubcategory }) => {
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>{category.name}</CardTitle>
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={() => onAddSubcategory(category.id, prompt('Enter subcategory name:'))}
+        >
+          Customize
+        </Button>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <label className="block text-sm font-medium">
+            Score: {category.score}
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={category.score}
+            onChange={(e) => onScoreChange(category.id, parseInt(e.target.value))}
+            className="w-full"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium">
+            Weight: {category.weight}%
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={category.weight}
+            onChange={(e) => onWeightChange(category.id, parseInt(e.target.value))}
+            className="w-full"
+          />
+        </div>
+        {category.subcategories.length > 0 && (
+          <div className="pl-4 space-y-4">
+            {category.subcategories.map(sub => (
+              <SubcategoryCard
+                key={sub.id}
+                subcategory={sub}
+                categoryId={category.id}
+                onScoreChange={onScoreChange}
+                onWeightChange={onWeightChange}
+              />
+            ))}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+const SubcategoryCard = ({ subcategory, categoryId, onScoreChange, onWeightChange }) => {
+  return (
+    <div className="space-y-2 border-l-2 pl-4">
+      <h4 className="font-medium">{subcategory.name}</h4>
+      <div className="space-y-2">
+        <label className="block text-sm">
+          Score: {subcategory.score}
+        </label>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={subcategory.score}
+          onChange={(e) => onScoreChange(`${categoryId}-${subcategory.id}`, parseInt(e.target.value))}
+          className="w-full"
+        />
+      </div>
+      <div className="space-y-2">
+        <label className="block text-sm">
+          Weight: {subcategory.weight}%
+        </label>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={subcategory.weight}
+          onChange={(e) => onWeightChange(`${categoryId}-${subcategory.id}`, parseInt(e.target.value))}
+          className="w-full"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default ScoringSystem;
+
+///////////////////////////////prompt used///////////////////////////////
+Here is my requirement for a website/web application:
+1. User Interface (UI)
+* Clean, simple, and intuitive design for ease of use.
+* The main screen will display two primary categories: Appearance and Personality, both with:
+   * A score (0-100) adjustable by the user via a slider.
+   * A weight (0-100) adjustable by the user via a slider, with the sum of both categories' weights always equal to 100.
+2. Parent Categories
+* Appearance and Personality will be the initial default categories.
+* Each of these categories will have:
+   * Score: A whole number between 0 and 100 that can be adjusted using a slider.
+   * Weight: A whole number between 0 and 100 that influences the final score, with the combined weights of all categories totaling 100.
+3. Subcategory Customization
+* Users can click a "Customize" button on either the Appearance or Personality categories to add subcategories.
+* Subcategories will be displayed under their parent category.
+* For example:
+   * Under Personality, subcategories might include:
+      * Fun (e.g., a playful nature)
+      * Core Values (e.g., honesty, integrity)
+   * Each subcategory will have:
+      * A score (adjustable between 0-100).
+      * A weight (adjustable between 0-100, but the sum of all subcategory weights within the parent category will always equal 100).
+4. Dynamic Calculations
+* The score of the parent category will be dynamically calculated based on its subcategories' scores and their weights.
+   * Example: If "Fun" has a score of 100 and weight of 90, and "Core Values" has a score of 80 and weight of 10, the Personality parent score will be the weighted average: Parent score=(100×90100)+(80×10100)=90+8=98\text{{Parent score}} = \left( \frac{{100 \times 90}}{100} \right) + \left( \frac{{80 \times 10}}{100} \right) = 90 + 8 = 98Parent score=(100100×90)+(10080×10​)=90+8=98
+   * This calculation will happen live as the user adjusts the scores or weights.
+5. User-Generated Categories
+* Users can add their own custom categories (e.g., "Skills", "Health", "Creativity").
+* Each custom category will:
+   * Be assigned an initial score (adjustable 0-100).
+   * Have an automatic weight that can be adjusted, and the system will ensure all categories' weights add up to 100.
+6. Real-Time Updates
+* The final calculated score will be displayed in real-time as the user adjusts the categories and subcategories. The user will see the updated final score immediately without needing to submit any form or press a button.
+7. Visual Design and Interaction
+* Sliders will allow for easy score and weight adjustments, ensuring the interface is interactive and user-friendly.
+* The final score will be dynamically updated on the page as users interact with the sliders.
+* There will likely be a reset button to restore default values, as well as clear labels for each element (score, weight, categories).

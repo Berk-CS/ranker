@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score and Weight Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Category and Subcategory Score Manager</h1>
+
+        <!-- Parent Categories Section -->
+        <div class="categories">
+            {% for category, data in categories.items() %}
+            <div class="category">
+                <h2>{{ category }}</h2>
+                <form method="POST">
+                    <label for="{{ category }}-score">Score (0-100):</label>
+                    <input type="range" id="{{ category }}-score" name="{{ category }}-score" min="0" max="100" value="{{ data.score }}">
+                    <span>{{ data.score }}</span>
+
+                    <label for="{{ category }}-weight">Weight (0-100):</label>
+                    <input type="range" id="{{ category }}-weight" name="{{ category }}-weight" min="0" max="100" value="{{ data.weight }}">
+                    <span>{{ data.weight }}</span>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Subcategories Section -->
+        <div class="subcategories">
+            <h2>Customize Categories</h2>
+            <form method="POST">
+                <label for="new_subcategory_name">Subcategory Name:</label>
+                <input type="text" id="new_subcategory_name" name="new_subcategory_name" placeholder="Enter subcategory name">
+                <button type="submit" name="add_subcategory">Add Subcategory</button>
+            </form>
+
+            <!-- Existing Subcategories -->
+            {% for subcategory in subcategories %}
+            <div class="subcategory">
+                <form method="POST">
+                    <label for="subcategory-{{ loop.index0 }}-score">{{ subcategory.name }} Score (0-100):</label>
+                    <input type="range" id="subcategory-{{ loop.index0 }}-score" name="subcategory-{{ loop.index0 }}-score" min="0" max="100" value="{{ subcategory.score }}">
+                    <span>{{ subcategory.score }}</span>
+
+                    <label for="subcategory-{{ loop.index0 }}-weight">Weight (0-100):</label>
+                    <input type="range" id="subcategory-{{ loop.index0 }}-weight" name="subcategory-{{ loop.index0 }}-weight" min="0" max="100" value="{{ subcategory.weight }}">
+                    <span>{{ subcategory.weight }}</span>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Final Result Section -->
+        <div class="result">
+            <h2>Final Score</h2>
+            <p>Total Score: {{ final_score }}</p>
+        </div>
+    </div>
+</body>
+</html>

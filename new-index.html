@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score and Weight Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Category and Subcategory Score Manager</h1>
+
+        <!-- Parent Categories Section -->
+        <div class="categories">
+            <div class="category">
+                <h2>Appearance</h2>
+                <label for="appearance-score">Score (0-100):</label>
+                <input type="range" id="appearance-score" min="0" max="100" value="50">
+                <span id="appearance-score-value">50</span>
+
+                <label for="appearance-weight">Weight (0-100):</label>
+                <input type="range" id="appearance-weight" min="0" max="100" value="50">
+                <span id="appearance-weight-value">50</span>
+            </div>
+
+            <div class="category">
+                <h2>Personality</h2>
+                <label for="personality-score">Score (0-100):</label>
+                <input type="range" id="personality-score" min="0" max="100" value="50">
+                <span id="personality-score-value">50</span>
+
+                <label for="personality-weight">Weight (0-100):</label>
+                <input type="range" id="personality-weight" min="0" max="100" value="50">
+                <span id="personality-weight-value">50</span>
+            </div>
+        </div>
+
+        <!-- Subcategories Section (Expandable by User) -->
+        <div class="subcategories">
+            <h2>Customize Categories</h2>
+            <button id="add-subcategory">Add Subcategory</button>
+
+            <!-- Subcategory Template -->
+            <div id="subcategory-template" class="subcategory" style="display: none;">
+                <label for="subcategory-name">Subcategory Name:</label>
+                <input type="text" class="subcategory-name" placeholder="Enter name">
+
+                <label for="subcategory-score">Score (0-100):</label>
+                <input type="range" class="subcategory-score" min="0" max="100" value="50">
+                <span class="subcategory-score-value">50</span>
+
+                <label for="subcategory-weight">Weight (0-100):</label>
+                <input type="range" class="subcategory-weight" min="0" max="100" value="50">
+                <span class="subcategory-weight-value">50</span>
+            </div>
+        </div>
+
+        <!-- Final Result Section -->
+        <div class="result">
+            <h2>Final Score</h2>
+            <p id="final-score">Total Score: 50</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
